@@ -12,6 +12,7 @@ use Twig\Loader\FilesystemLoader;
 abstract class AbstractController
 {
     protected Environment $twig;
+    public array $errors;
 
 
     public function __construct()
@@ -24,6 +25,7 @@ abstract class AbstractController
                 'debug' => (ENV === 'dev'),
             ]
         );
+        $this->errors = [];
         $this->twig->addExtension(new DebugExtension());
         // Variable Globale TWIG
         $this->twig->addGlobal('user', isset($_SESSION['login']));

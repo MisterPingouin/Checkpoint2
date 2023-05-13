@@ -2,6 +2,13 @@
 
 {% block content %}
 <div class="main-container">
+    {% if errors is defined %}
+        <ul>
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+{% endif %}
     <h1>Add a new cupcake</h1>
     {% include 'Cupcake/_form.html.twig' %}
 </div>

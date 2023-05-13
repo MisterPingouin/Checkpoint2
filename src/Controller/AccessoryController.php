@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Model\AccessoryManager;
+
 /**
  * Class AccessoryController
  *
@@ -19,8 +21,31 @@ class AccessoryController extends AbstractController
     public function add()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $data = array_map('trim', $_POST);
+
+            $name = $data['name'];
+            $url = $data['url'];
+
+            if (!isset($name) || empty($name)) {
+                $this->errors[] = 'You must write a name';
+            }
+            if (!isset($url) || empty($url)) {
+                $this->errors[] = 'Please fill in url field.';
+            }
+            if (!filter_var($url, FILTER_VALIDATE_URL)) {
+                $this->errors[] = 'Wrong URL format';
+            }
+            if (empty($this->errors)) {
+                $accessoryManager = new AccessoryManager();
+                $accessoryManager->insertAccessory($name, $url);
+                header('Location:/accessory/list');
+                die();
+            }
+            return $this->twig->render('/accessory/add.html.twig', [
+                'errors' => $this->errors,
+            ]);
             //TODO Add your code here to create a new accessory
-            header('Location:/accessory/list');
         }
         return $this->twig->render('Accessory/add.html.twig');
     }
@@ -33,9 +58,13 @@ class AccessoryController extends AbstractController
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function list()
-    {
-        //TODO Add your code here to retrieve all accessories
-        return $this->twig->render('Accessory/list.html.twig');
-    }
+
+        public function list()
+        {
+            $accessoryManager = new AccessoryManager();
+            $accessories = $accessoryManager->selectAll('id');
+            //TODO Retrieve all cupcakes
+            return $this->twig->render('Accessory/list.html.twig', [ 'accessories' => $accessories]);
+        }
+    
 }

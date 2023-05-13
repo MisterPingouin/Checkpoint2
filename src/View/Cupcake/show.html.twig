@@ -1,0 +1,9 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <div class="main-container">
+        <h1>{{ cupcake.name }}</h1>
+        {% include 'Cupcake/_cupcake.html.twig' %}
+        <!-- Add more details here if you want -->
+    </div>
+{% endblock %}
